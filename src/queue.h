@@ -32,14 +32,15 @@ private:
         while (true) {
             try {
                 daemon_notifier->try_get_non_blocking();
+                std::cout << this->workers.size() << "\n";
                 return;
             } catch (bool x) {}
-            for (auto worker_tuple_ptr = workers.begin(); worker_tuple_ptr < workers.end(); worker_tuple_ptr++) {
+            for (auto worker_tuple_ptr = this->workers.begin(); worker_tuple_ptr < this->workers.end(); worker_tuple_ptr++) {
                 auto worker_tuple = *worker_tuple_ptr;
                 Worker* worker = std::get<0>(worker_tuple);
                 ThreadCompleteNotifier<bool>* notifier = std::get<1>(worker_tuple);
                 notifier->get();
-                workers.erase(worker_tuple_ptr);
+                this->workers.erase(worker_tuple_ptr);
                 delete worker;
                 delete notifier;
             }
