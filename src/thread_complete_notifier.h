@@ -1,3 +1,6 @@
+#ifndef THREAD_COMPLETE_NOTIFIER
+#define THREAD_COMPLETE_NOTIFIER
+
 template <typename T> 
 class ThreadCompleteNotifier {
 private:
@@ -34,3 +37,5 @@ public:
 
     ~ThreadCompleteNotifier() {}
 };
+
+#endif // THREAD_COMPLETE_NOTIFIER

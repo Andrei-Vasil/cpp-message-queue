@@ -1,3 +1,6 @@
+#ifndef QUEUE
+#define QUEUE
+
 #include <queue>
 #include <thread>
 #include <condition_variable>
@@ -98,3 +101,5 @@ public:
         return val_to_return;
     }
 };
+
+#endif QUEUE

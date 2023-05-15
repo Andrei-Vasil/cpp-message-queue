@@ -1,3 +1,6 @@
+#ifndef WORKER
+#define WORKER
+
 class Worker {
 private:
     std::thread* thread;
@@ -12,3 +15,5 @@ public:
         delete this->thread;
     }
 };
+
+#endif // WORKER
