@@ -31,22 +31,25 @@ private:
         this->q.pop();
     }
 
+    void remove_workers() {
+        for (auto worker_tuple_ptr = this->workers.begin(); worker_tuple_ptr < this->workers.end(); worker_tuple_ptr++) {
+            auto worker_tuple = *worker_tuple_ptr;
+            Worker* worker = std::get<0>(worker_tuple);
+            ThreadCompleteNotifier<bool>* notifier = std::get<1>(worker_tuple);
+            notifier->get();
+            this->workers.erase(worker_tuple_ptr);
+            delete worker;
+            delete notifier;
+        }
+    }
+
     void start_daemon(ThreadCompleteNotifier<bool>* daemon_notifier) {
         while (true) {
             try {
                 daemon_notifier->try_get_non_blocking();
-                std::cout << this->workers.size() << "\n";
                 return;
             } catch (bool x) {}
-            for (auto worker_tuple_ptr = this->workers.begin(); worker_tuple_ptr < this->workers.end(); worker_tuple_ptr++) {
-                auto worker_tuple = *worker_tuple_ptr;
-                Worker* worker = std::get<0>(worker_tuple);
-                ThreadCompleteNotifier<bool>* notifier = std::get<1>(worker_tuple);
-                notifier->get();
-                this->workers.erase(worker_tuple_ptr);
-                delete worker;
-                delete notifier;
-            }
+            this->remove_workers();
         }
     }
 
@@ -67,6 +70,7 @@ public:
         std::get<1>(this->daemon)->notify(true);
         delete std::get<0>(this->daemon);
         delete std::get<1>(this->daemon);
+        this->remove_workers();
     }
 
     void push(T elem) {
