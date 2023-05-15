@@ -102,4 +102,4 @@ public:
     }
 };
 
-#endif QUEUE
+#endif // QUEUE
