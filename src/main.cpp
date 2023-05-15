@@ -7,11 +7,6 @@
 #include "pub_sub_lib/queue_manager.h"
 
 int main() {
-    // Queue<int>* Q = new Queue<int>();
-    // Q->push(5);
-    // std::cout << Q->pop() << "\n";        
-    // delete Q;
-
     SharedMemory* shared_memory = new SharedMemory{};
     TopicManager* topic_manager = new TopicManager{shared_memory};
     QueueManager* queue_manager = new QueueManager{shared_memory, topic_manager};

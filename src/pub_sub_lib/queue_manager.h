@@ -41,11 +41,34 @@ public:
     }
 
     std::string publish(std::string topic, int message) {
-        return "publish\r\n";
+        std::ostringstream oss; 
+        if (!this->topic_manager->exists(topic)) {
+            oss << "There is no topic named: " << topic << "\r\n";
+            return oss.str();
+        }
+        std::unique_lock(this->shared_memory->queue_channels_mutex);
+        for (auto pair_ : this->shared_memory->queue_channels[topic]) {
+            Queue<int>* queue = pair_.second;
+            queue->push(message);
+        }
+        oss << "Successfully published your message to " << topic << " topic\r\n";
+        return oss.str();
     }
 
     std::string retrieve(std::string topic, int id) {
-        return "retrieve\r\n";
+        std::ostringstream oss; 
+        if (!this->topic_manager->exists(topic)) {
+            oss << "There is no topic named: " << topic << "\r\n";
+            return oss.str();
+        }
+        if (!this->shared_memory->queue_channel_exists_4_id(topic, id)) {
+            oss << "There is no id with specified value: " << id << "\r\n";
+            return oss.str();
+        }
+        std::unique_lock(this->shared_memory->queue_channels_mutex);
+        Queue<int>* queue = this->shared_memory->queue_channels[topic][id];
+        oss << queue->pop() << "\r\n";
+        return oss.str();
     }
 };
 
