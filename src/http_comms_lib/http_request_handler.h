@@ -41,54 +41,38 @@ private:
     }
 
     std::string subscribe(std::vector<std::string> parameters) {
-        std::ostringstream oss; 
         if (parameters.size() != 1) {
-            oss << "HTTP/1.1 404 NOT FOUND\r\n\r\nInvalid path\r\n";
-            return oss.str();
+            return "HTTP/1.1 404 NOT FOUND\r\n\r\nInvalid path\r\n";
         }
         std::string topic = parameters[0];
-        // TODO: connect with backend
-        oss << "Subscribe" << "\r\n";
-        return oss.str();
+        return this->subscription_manager->subscribe(topic);
     }
 
     std::string unsubscribe(std::vector<std::string> parameters) {
-        std::ostringstream oss; 
         if (parameters.size() != 2) {
-            oss << "HTTP/1.1 404 NOT FOUND\r\n\r\nInvalid path\r\n";
-            return oss.str();
+            return "HTTP/1.1 404 NOT FOUND\r\n\r\nInvalid path\r\n";
         }
         std::string topic = parameters[0];
         int id = atoi(parameters[1].c_str());
-        // TODO: connect with backend
-        oss << "Unsubscribe" << "\r\n";
-        return oss.str();
+        return this->subscription_manager->unsubscribe(topic, id);
     }
 
     std::string publish(std::vector<std::string> parameters, std::string body) {
-        std::ostringstream oss; 
         if (parameters.size() != 1) {
-            oss << "HTTP/1.1 404 NOT FOUND\r\n\r\nInvalid path\r\n";
-            return oss.str();
+            return "HTTP/1.1 404 NOT FOUND\r\n\r\nInvalid path\r\n";
         }
         std::string topic = parameters[0];
         int message = json::parse(body)["item"];
-        // TODO: connect with backend
-        oss << "Publish" << "\r\n";
-        return oss.str();
+        return this->queue_manager->publish(topic, message);
     }
 
     std::string retrieve(std::vector<std::string> parameters) {
-        std::ostringstream oss; 
         if (parameters.size() != 2) {
-            oss << "HTTP/1.1 404 NOT FOUND\r\n\r\nInvalid path\r\n";
-            return oss.str();
+            return "HTTP/1.1 404 NOT FOUND\r\n\r\nInvalid path\r\n";
         }
         std::string topic = parameters[0];
         int id = atoi(parameters[1].c_str());
-        // TODO: connect with backend
-        oss << "Retrieve" << "\r\n";
-        return oss.str();
+        return this->queue_manager->retrieve(topic, id);
     }
 
     void setup() {
