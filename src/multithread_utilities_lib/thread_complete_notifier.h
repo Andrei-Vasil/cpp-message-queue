@@ -4,9 +4,9 @@
 template <typename T> 
 class ThreadCompleteNotifier {
 private:
-    std::condition_variable condvar = std::condition_variable();
-    std::mutex mutex = std::mutex();
-    T return_val = T();
+    std::condition_variable condvar();
+    std::mutex mutex();
+    T return_val();
     bool returned = false;
 
 public:
