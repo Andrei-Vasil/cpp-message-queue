@@ -4,12 +4,19 @@
 #include "../../external_libs/cpp-httplib/httplib.h"
 #include "../../external_libs/json/single_include/nlohmann/json.hpp"
 #include "../string_utilities_lib/string_utilities.h"
+#include "../pub_sub_lib/topic_manager.h"
+#include "../pub_sub_lib/queue_manager.h"
+#include "../pub_sub_lib/subscription_manager.h"
+#include "../pub_sub_lib/shared_memory.h"
 
 using json = nlohmann::json;
 
 class HttpRequestHandler {
 
 private:
+    TopicManager* topic_manager;
+    QueueManager* queue_manager;
+    SubscriptionManager* subscription_manager;
     httplib::Server server;
 
     std::vector<std::string> extract_path_parameters(const httplib::Request &request) {
@@ -18,27 +25,19 @@ private:
     }
 
     std::string new_topic(std::vector<std::string> parameters) {
-        std::ostringstream oss; 
         if (parameters.size() != 1) {
-            oss << "HTTP/1.1 404 NOT FOUND\r\n\r\nInvalid path\r\n";
-            return oss.str();
+            return "HTTP/1.1 404 NOT FOUND\r\n\r\nInvalid path\r\n";
         }
         std::string topic = parameters[0];
-        // TODO: connect with backend
-        oss << "New topic" << "\r\n";
-        return oss.str();
+        return this->topic_manager->new_topic(topic);
     }
 
     std::string remove_topic(std::vector<std::string> parameters) {
-        std::ostringstream oss; 
         if (parameters.size() != 1) {
-            oss << "HTTP/1.1 404 NOT FOUND\r\n\r\nInvalid path\r\n";
-            return oss.str();
+            return "HTTP/1.1 404 NOT FOUND\r\n\r\nInvalid path\r\n";
         }
         std::string topic = parameters[0];
-        // TODO: connect with backend
-        oss << "Remove topic" << "\r\n";
-        return oss.str();
+        return this->topic_manager->remove_topic(topic);
     }
 
     std::string subscribe(std::vector<std::string> parameters) {
@@ -137,7 +136,11 @@ private:
 
 public:
 
-    HttpRequestHandler() {}
+    HttpRequestHandler(TopicManager* topic_manager, QueueManager* queue_manager, SubscriptionManager* subscription_manager) {
+        this->topic_manager = topic_manager;
+        this->queue_manager = queue_manager;
+        this->subscription_manager = subscription_manager;
+    }
 
     void run() {
         this->setup();
