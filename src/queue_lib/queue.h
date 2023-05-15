@@ -4,8 +4,8 @@
 #include <queue>
 #include <thread>
 #include <condition_variable>
-#include "worker.h"
-#include "thread_complete_notifier.h"
+#include "../multithread_utilities_lib/worker.h"
+#include "../multithread_utilities_lib/thread_complete_notifier.h"
 
 template <typename T>
 class Queue {
