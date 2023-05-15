@@ -11,8 +11,8 @@ template <typename T>
 class Queue {
 private:
     std::queue<T> q;
-    std::mutex q_mutex();
-    std::condition_variable q_condvar();
+    std::mutex q_mutex = std::mutex();
+    std::condition_variable q_condvar = std::condition_variable();
     std::vector<std::tuple<Worker*, ThreadCompleteNotifier<bool>*>> workers;
     std::tuple<Worker*, ThreadCompleteNotifier<bool>*> daemon;
     
