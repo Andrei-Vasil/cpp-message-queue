@@ -62,7 +62,7 @@ private:
             return "HTTP/1.1 404 NOT FOUND\r\n\r\nInvalid path\r\n";
         }
         std::string topic = parameters[0];
-        int message = json::parse(body)["item"];
+        std::string message = json::parse(body)["item"];
         return this->queue_manager->publish(topic, message);
     }
 

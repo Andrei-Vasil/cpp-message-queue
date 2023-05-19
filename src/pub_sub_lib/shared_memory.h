@@ -7,7 +7,7 @@ class SharedMemory {
 public:
     std::set<std::string> topics = std::set<std::string>{};
     std::mutex topics_mutex = std::mutex{};
-    std::unordered_map<std::string, std::unordered_map<int, Queue<int>*>> queue_channels = std::unordered_map<std::string, std::unordered_map<int, Queue<int>*>>{};
+    std::unordered_map<std::string, std::unordered_map<int, Queue<std::string>*>> queue_channels = std::unordered_map<std::string, std::unordered_map<int, Queue<std::string>*>>{};
     std::mutex queue_channels_mutex = std::mutex{};
     std::unordered_map<std::string, int> max_id_4_topic = std::unordered_map<std::string, int>{};
     std::mutex max_id_4_topic_mutex = std::mutex{};
@@ -44,7 +44,7 @@ public:
 
     void put_new_queue_channels_4_topic(std::string topic) {
         std::unique_lock(this->queue_channels_mutex);
-        this->queue_channels[topic] = std::unordered_map<int, Queue<int>*>{};
+        this->queue_channels[topic] = std::unordered_map<int, Queue<std::string>*>{};
     }
 
     void remove_queue_channels_4_topic(std::string topic) {
@@ -54,7 +54,7 @@ public:
 
     void put_new_queue_channel_4_id(std::string topic, int id) {
         std::unique_lock(this->queue_channels_mutex);
-        this->queue_channels[topic][id] = new Queue<int>{};
+        this->queue_channels[topic][id] = new Queue<std::string>{};
     }
 
     bool queue_channel_exists_4_id(std::string topic, int id) {

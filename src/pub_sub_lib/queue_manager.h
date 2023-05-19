@@ -40,7 +40,7 @@ public:
         return oss.str();
     }
 
-    std::string publish(std::string topic, int message) {
+    std::string publish(std::string topic, std::string message) {
         std::ostringstream oss; 
         if (!this->topic_manager->exists(topic)) {
             oss << "There is no topic named: " << topic << "\r\n";
@@ -48,7 +48,7 @@ public:
         }
         std::unique_lock(this->shared_memory->queue_channels_mutex);
         for (auto pair_ : this->shared_memory->queue_channels[topic]) {
-            Queue<int>* queue = pair_.second;
+            Queue<std::string>* queue = pair_.second;
             queue->push(message);
         }
         oss << "Successfully published your message to " << topic << " topic\r\n";
@@ -66,7 +66,7 @@ public:
             return oss.str();
         }
         std::unique_lock(this->shared_memory->queue_channels_mutex);
-        Queue<int>* queue = this->shared_memory->queue_channels[topic][id];
+        Queue<std::string>* queue = this->shared_memory->queue_channels[topic][id];
         oss << queue->pop() << "\r\n";
         return oss.str();
     }
