@@ -97,6 +97,7 @@ public:
             new Worker {
                 new std::thread([this, notifier, worker_notifier] {
                     this->low_level_pop(notifier);
+                    count_consumer_throughput();
                     worker_notifier->notify(true);
                 })
             },

@@ -13,7 +13,8 @@ public:
     static bool BENCHMARKING;
     static int BENCHMARK_ID;
     static std::string BENCHMARK_LATENCY_FILE;
-    static std::string BENCHMARK_THROUGHPUT_FILE;
+    static std::string BENCHMARK_THROUGHPUT_PRODUCER_FILE;
+    static std::string BENCHMARK_THROUGHPUT_CONSUMER_FILE;
 
     static std::string yyyy_mm_dd_now() {
         std::time_t rawtime;
@@ -34,9 +35,13 @@ public:
         oss_latency << "data/latency/" << yyyy_mm_dd_now() << "-" << BENCHMARK_ID << ".csv";
         BENCHMARK_LATENCY_FILE = oss_latency.str();
 
-        std::ostringstream oss_throughput; 
-        oss_throughput << "data/" << yyyy_mm_dd_now() << "-" << BENCHMARK_ID << ".csv";
-        BENCHMARK_THROUGHPUT_FILE = oss_throughput.str();
+        std::ostringstream oss_throughput_produce; 
+        oss_throughput_produce << "data/throughput/produce" << yyyy_mm_dd_now() << "-" << BENCHMARK_ID << ".csv";
+        BENCHMARK_THROUGHPUT_PRODUCER_FILE = oss_throughput_produce.str();
+
+        std::ostringstream oss_throughput_consume; 
+        oss_throughput_consume << "data/throughput/consume" << yyyy_mm_dd_now() << "-" << BENCHMARK_ID << ".csv";
+        BENCHMARK_THROUGHPUT_CONSUMER_FILE = oss_throughput_consume.str();
     }
 };
 
@@ -67,7 +72,15 @@ void count_publish_throughput() {
     if (!BenchmarkingMetrics::BENCHMARKING) {
         return;
     }
-    std::ofstream outfile(BenchmarkingMetrics::BENCHMARK_THROUGHPUT_FILE, std::ios_base::app);
+    std::ofstream outfile(BenchmarkingMetrics::BENCHMARK_THROUGHPUT_PRODUCER_FILE, std::ios_base::app);
+    outfile << timestamp_now_seconds() << "\n";
+}
+
+void count_consumer_throughput() {
+    if (!BenchmarkingMetrics::BENCHMARKING) {
+        return;
+    }
+    std::ofstream outfile(BenchmarkingMetrics::BENCHMARK_THROUGHPUT_CONSUMER_FILE, std::ios_base::app);
     outfile << timestamp_now_seconds() << "\n";
 }
 
