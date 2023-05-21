@@ -81,6 +81,7 @@ public:
                 new std::thread([this, elem, worker_notifier, benchmark_id] {
                     this->low_level_push(elem);
                     set_publish_over(benchmark_id);
+                    count_publish_throughput();
                     worker_notifier->notify(true);
                 }),
             },

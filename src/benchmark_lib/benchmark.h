@@ -12,7 +12,8 @@ class BenchmarkingMetrics {
 public:
     static bool BENCHMARKING;
     static int BENCHMARK_ID;
-    static std::string BENCHMARK_FILE;
+    static std::string BENCHMARK_LATENCY_FILE;
+    static std::string BENCHMARK_THROUGHPUT_FILE;
 
     static std::string yyyy_mm_dd_now() {
         std::time_t rawtime;
@@ -26,16 +27,22 @@ public:
 
     static void init_vars() {
         BENCHMARKING = true;
-        BENCHMARK_ID = 1;
-        std::ostringstream oss; 
-        oss << "data/" << yyyy_mm_dd_now() << "-" << BENCHMARK_ID << ".csv";
-        BENCHMARK_FILE = oss.str();
+        
+        BENCHMARK_ID = 5;
+        
+        std::ostringstream oss_latency; 
+        oss_latency << "data/latency/" << yyyy_mm_dd_now() << "-" << BENCHMARK_ID << ".csv";
+        BENCHMARK_LATENCY_FILE = oss_latency.str();
+
+        std::ostringstream oss_throughput; 
+        oss_throughput << "data/" << yyyy_mm_dd_now() << "-" << BENCHMARK_ID << ".csv";
+        BENCHMARK_THROUGHPUT_FILE = oss_throughput.str();
     }
 };
 
 #endif
 
-std::string timestamp_now() {
+std::string timestamp_now_nanoseconds() {
     long long timestamp = std::chrono::time_point_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now()).time_since_epoch().count();
     long long nanoseconds = timestamp % 1000000000;
     long long seconds = timestamp / 1000000000;
@@ -44,12 +51,24 @@ std::string timestamp_now() {
     return oss.str();
 }
 
+long long timestamp_now_seconds() {
+    return std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::system_clock::now()).time_since_epoch().count();
+}
+
 void set_publish_over(int benchmark_id) {
     if (!BenchmarkingMetrics::BENCHMARKING) {
         return;
     }
-    std::ofstream outfile(BenchmarkingMetrics::BENCHMARK_FILE, std::ios_base::app);
-    outfile << timestamp_now() << "," << benchmark_id << "\n";
+    std::ofstream outfile(BenchmarkingMetrics::BENCHMARK_LATENCY_FILE, std::ios_base::app);
+    outfile << timestamp_now_nanoseconds() << "," << benchmark_id << "\n";
+}
+
+void count_publish_throughput() {
+    if (!BenchmarkingMetrics::BENCHMARKING) {
+        return;
+    }
+    std::ofstream outfile(BenchmarkingMetrics::BENCHMARK_THROUGHPUT_FILE, std::ios_base::app);
+    outfile << timestamp_now_seconds() << "\n";
 }
 
 #endif
