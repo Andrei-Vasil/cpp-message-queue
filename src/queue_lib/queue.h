@@ -6,6 +6,7 @@
 #include <condition_variable>
 #include "../multithread_utilities_lib/worker.h"
 #include "../multithread_utilities_lib/thread_complete_notifier.h"
+#include "../benchmark_lib/benchmark.h"
 
 template <typename T>
 class Queue {
@@ -73,12 +74,13 @@ public:
         this->remove_workers();
     }
 
-    void push(T elem) {
+    void push(T elem, int benchmark_id) {
         ThreadCompleteNotifier<bool>* worker_notifier = new ThreadCompleteNotifier<bool>{};
         this->workers.push_back(std::make_tuple(
             new Worker {
-                new std::thread([this, elem, worker_notifier] {
+                new std::thread([this, elem, worker_notifier, benchmark_id] {
                     this->low_level_push(elem);
+                    set_publish_over(benchmark_id);
                     worker_notifier->notify(true);
                 }),
             },

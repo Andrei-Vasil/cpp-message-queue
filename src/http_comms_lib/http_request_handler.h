@@ -63,7 +63,8 @@ private:
         }
         std::string topic = parameters[0];
         std::string message = json::parse(body)["item"];
-        return this->queue_manager->publish(topic, message);
+        int benchmark_id = json::parse(body)["benchmark_id"];
+        return this->queue_manager->publish(topic, message, benchmark_id);
     }
 
     std::string retrieve(std::vector<std::string> parameters) {

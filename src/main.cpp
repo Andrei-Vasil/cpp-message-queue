@@ -5,8 +5,18 @@
 #include "pub_sub_lib/topic_manager.h"
 #include "pub_sub_lib/subscription_manager.h"
 #include "pub_sub_lib/queue_manager.h"
+#include "benchmark_lib/benchmark.h"
+
+bool BenchmarkingMetrics::BENCHMARKING = true;
+int BenchmarkingMetrics::BENCHMARK_ID = 1;
+std::string BenchmarkingMetrics::BENCHMARK_FILE = "";
+
+#include <cstdio>
+#include <ctime>
 
 int main() {
+    BenchmarkingMetrics::init_vars();
+
     SharedMemory* shared_memory = new SharedMemory{};
     TopicManager* topic_manager = new TopicManager{shared_memory};
     QueueManager* queue_manager = new QueueManager{shared_memory, topic_manager};
