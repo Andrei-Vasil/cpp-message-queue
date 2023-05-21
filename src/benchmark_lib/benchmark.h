@@ -36,11 +36,11 @@ public:
         BENCHMARK_LATENCY_FILE = oss_latency.str();
 
         std::ostringstream oss_throughput_produce; 
-        oss_throughput_produce << "data/throughput/produce" << yyyy_mm_dd_now() << "-" << BENCHMARK_ID << ".csv";
+        oss_throughput_produce << "data/throughput/produce/" << yyyy_mm_dd_now() << "-" << BENCHMARK_ID << ".csv";
         BENCHMARK_THROUGHPUT_PRODUCER_FILE = oss_throughput_produce.str();
 
         std::ostringstream oss_throughput_consume; 
-        oss_throughput_consume << "data/throughput/consume" << yyyy_mm_dd_now() << "-" << BENCHMARK_ID << ".csv";
+        oss_throughput_consume << "data/throughput/consume/" << yyyy_mm_dd_now() << "-" << BENCHMARK_ID << ".csv";
         BENCHMARK_THROUGHPUT_CONSUMER_FILE = oss_throughput_consume.str();
     }
 };
