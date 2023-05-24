@@ -113,7 +113,7 @@ private:
             response.set_content(response_as_str, "text/plain");
         });
 
-        this->server.Post(R"(/publish/[^\/]+)", [this](const httplib::Request &request, httplib::Response &response, const httplib::ContentReader& content_reader) {
+        this->server.Post(R"(/publish/[^\/]+/[^\/]+)", [this](const httplib::Request &request, httplib::Response &response, const httplib::ContentReader& content_reader) {
             std::vector<std::string> parameters = this->extract_path_parameters(request);
             std::string body;
             content_reader([&](const char *data, size_t data_length) {
@@ -124,7 +124,7 @@ private:
             response.set_content(response_as_str, "text/plain");
         });
 
-        this->server.Get(R"(/subscription/[^\/]+/[^\/]+)", [this](const httplib::Request &request, httplib::Response &response) {
+        this->server.Get(R"(/subscription/[^\/]+/[^\/]+/[^\/]+)", [this](const httplib::Request &request, httplib::Response &response) {
             std::vector<std::string> parameters = this->extract_path_parameters(request);
             std::string response_as_str = this->retrieve(parameters); 
             response.set_content(response_as_str, "text/plain");
