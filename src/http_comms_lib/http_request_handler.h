@@ -64,7 +64,8 @@ private:
         std::string topic = parameters[0];
         std::string message = json::parse(body)["item"];
         int benchmark_id = json::parse(body)["benchmark_id"];
-        return this->queue_manager->publish(topic, message, benchmark_id);
+        std::string scenario_id = parameters[1];
+        return this->queue_manager->publish(topic, message, benchmark_id, scenario_id);
     }
 
     std::string retrieve(std::vector<std::string> parameters) {
@@ -73,7 +74,8 @@ private:
         }
         std::string topic = parameters[0];
         int id = atoi(parameters[1].c_str());
-        return this->queue_manager->retrieve(topic, id);
+        std::string scenario_id = parameters[2];
+        return this->queue_manager->retrieve(topic, id, scenario_id);
     }
 
     void setup() {

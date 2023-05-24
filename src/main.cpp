@@ -8,10 +8,6 @@
 #include "benchmark_lib/benchmark.h"
 
 bool BenchmarkingMetrics::BENCHMARKING = true;
-int BenchmarkingMetrics::BENCHMARK_ID = 1;
-std::string BenchmarkingMetrics::BENCHMARK_LATENCY_FILE = "";
-std::string BenchmarkingMetrics::BENCHMARK_THROUGHPUT_PRODUCER_FILE = "";
-std::string BenchmarkingMetrics::BENCHMARK_THROUGHPUT_CONSUMER_FILE = "";
 
 #include <cstdio>
 #include <ctime>

@@ -74,14 +74,14 @@ public:
         this->remove_workers();
     }
 
-    void push(T elem, int benchmark_id) {
+    void push(T elem, int benchmark_id, std::string scenario_id) {
         ThreadCompleteNotifier<bool>* worker_notifier = new ThreadCompleteNotifier<bool>{};
         this->workers.push_back(std::make_tuple(
             new Worker {
                 new std::thread([this, elem, worker_notifier, benchmark_id] {
                     this->low_level_push(elem);
-                    set_publish_over(benchmark_id);
-                    count_publish_throughput();
+                    set_publish_over(benchmark_id, scenario_id);
+                    count_publish_throughput(scenario_id);
                     worker_notifier->notify(true);
                 }),
             },
@@ -89,7 +89,7 @@ public:
         ));
     }
 
-    T pop() {       
+    T pop(std::string scenario_id) {       
         ThreadCompleteNotifier<T>* notifier = new ThreadCompleteNotifier<T>{};
 
         ThreadCompleteNotifier<bool>* worker_notifier = new ThreadCompleteNotifier<bool>{};
@@ -97,7 +97,7 @@ public:
             new Worker {
                 new std::thread([this, notifier, worker_notifier] {
                     this->low_level_pop(notifier);
-                    count_consumer_throughput();
+                    count_consumer_throughput(scenario_id);
                     worker_notifier->notify(true);
                 })
             },

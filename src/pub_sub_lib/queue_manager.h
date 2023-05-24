@@ -40,7 +40,7 @@ public:
         return oss.str();
     }
 
-    std::string publish(std::string topic, std::string message, int benchmark_id) {
+    std::string publish(std::string topic, std::string message, int benchmark_id, std::string scenario_id) {
         std::ostringstream oss; 
         if (!this->topic_manager->exists(topic)) {
             oss << "There is no topic named: " << topic << "\r\n";
@@ -49,13 +49,13 @@ public:
         std::unique_lock(this->shared_memory->queue_channels_mutex);
         for (auto pair_ : this->shared_memory->queue_channels[topic]) {
             Queue<std::string>* queue = pair_.second;
-            queue->push(message, benchmark_id);
+            queue->push(message, benchmark_id, scenario_id);
         }
         oss << "Successfully published your message to " << topic << " topic\r\n";
         return oss.str();
     }
 
-    std::string retrieve(std::string topic, int id) {
+    std::string retrieve(std::string topic, int id, std::string scenario_id) {
         std::ostringstream oss; 
         if (!this->topic_manager->exists(topic)) {
             oss << "There is no topic named: " << topic << "\r\n";
@@ -67,7 +67,7 @@ public:
         }
         std::unique_lock(this->shared_memory->queue_channels_mutex);
         Queue<std::string>* queue = this->shared_memory->queue_channels[topic][id];
-        oss << queue->pop() << "\r\n";
+        oss << queue->pop(scenario_id) << "\r\n";
         return oss.str();
     }
 };
