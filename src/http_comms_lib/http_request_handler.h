@@ -11,6 +11,15 @@
 
 using json = nlohmann::json;
 
+const std::string currentDateTime() {
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char       buf[80];
+    tstruct = *localtime(&now);
+    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
+    return buf;
+}
+
 class HttpRequestHandler {
 
 private:
@@ -21,6 +30,7 @@ private:
 
     std::vector<std::string> extract_path_parameters(const httplib::Request &request) {
         std::vector<std::string> parameters = split(request.path, "/");
+        std::cout << request.method << " " << request.path << " " << currentDateTime() << "\n";
         return std::vector<std::string>(parameters.begin() + 2, parameters.end());
     }
 
@@ -58,7 +68,7 @@ private:
     }
 
     std::string publish(std::vector<std::string> parameters, std::string body) {
-        if (parameters.size() != 1) {
+        if (parameters.size() != 2) {
             return "HTTP/1.1 404 NOT FOUND\r\n\r\nInvalid path\r\n";
         }
         std::string topic = parameters[0];
@@ -69,7 +79,7 @@ private:
     }
 
     std::string retrieve(std::vector<std::string> parameters) {
-        if (parameters.size() != 2) {
+        if (parameters.size() != 3) {
             return "HTTP/1.1 404 NOT FOUND\r\n\r\nInvalid path\r\n";
         }
         std::string topic = parameters[0];
