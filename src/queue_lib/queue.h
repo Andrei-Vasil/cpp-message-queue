@@ -78,7 +78,7 @@ public:
         ThreadCompleteNotifier<bool>* worker_notifier = new ThreadCompleteNotifier<bool>{};
         this->workers.push_back(std::make_tuple(
             new Worker {
-                new std::thread([this, elem, worker_notifier, benchmark_id] {
+                new std::thread([this, elem, worker_notifier, benchmark_id, scenario_id] {
                     this->low_level_push(elem);
                     set_publish_over(benchmark_id, scenario_id);
                     count_publish_throughput(scenario_id);
@@ -95,7 +95,7 @@ public:
         ThreadCompleteNotifier<bool>* worker_notifier = new ThreadCompleteNotifier<bool>{};
         this->workers.push_back(std::make_tuple(
             new Worker {
-                new std::thread([this, notifier, worker_notifier] {
+                new std::thread([this, notifier, worker_notifier, scenario_id] {
                     this->low_level_pop(notifier);
                     count_consumer_throughput(scenario_id);
                     worker_notifier->notify(true);
