@@ -7,7 +7,7 @@
 #include "pub_sub_lib/queue_manager.h"
 #include "benchmark_lib/benchmark.h"
 
-bool BenchmarkingMetrics::BENCHMARKING = true;
+bool BenchmarkingMetrics::BENCHMARKING = false;
 
 #include <cstdio>
 #include <ctime>

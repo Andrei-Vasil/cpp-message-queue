@@ -13,7 +13,7 @@ public:
     static bool BENCHMARKING;
 
     static void init_vars() {
-        BENCHMARKING = true;
+        BENCHMARKING = false;
     }
 };
 
